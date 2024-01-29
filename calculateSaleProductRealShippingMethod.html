@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mermaid Diagram</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+</head>
+<body>
+
+<div class="mermaid">
+    graph TD
+    A([Start]) --> |Get SaleProduct| B{Is Source 'MeublePromo'?}
+    B -->|Yes| C{Shipping Method?}
+    B -->|No| J[Proceed to Postal Code]
+    C -->|classic_classic| D[Set AxMenzzoDeliveryMethod 'classic']
+    C -->|etage_etage| E[Set AxMenzzoDeliveryMethod 'etage']
+
+    J --> K[Format Postal Code]
+    K --> L{AxMenzzoDeliveryMethod 'etage' or 'etage_with_assembly'?}
+    L -->|Yes| M{In IDF Area?}
+    L -->|No| N{Set RealShippingMethod}
+    M -->|Yes| O[Set RealShippingMethod 'ETAGE_IDF']
+    M -->|No| P[Set RealShippingMethod 'VIR']
+
+    N --> Q{AxMenzzoDeliveryMethod 'retrait'?}
+    Q -->|Yes| R[Set RealShippingMethod 'RETRAIT']
+    Q -->|No| S[Calculate based on Shipping Info]
+
+    S --> T[Get Shipping Service]
+    T --> U[Get Shipment Service]
+    U --> V[Get Product Info]
+    V --> W[Calculate Max Length]
+    W --> X[Get Category IDs]
+    X --> Y{Check Conditions for VIR_BAS_IMMEUBLE}
+    Y -->|Yes| Z[Set RealShippingMethod 'VIR_BAS_IMMEUBLE']
+    Y -->|No| AA{Check if Chronopostable}
+    AA -->|Yes, Weight <= 14| AB[Set RealShippingMethod 'GLS']
+    AA -->|Yes, Otherwise| AC[Set RealShippingMethod 'CHRONOPOST']
+    AA -->|No| AD{Check Department and Source}
+
+    AD -->|FR, Dept in List| AE[Set RealShippingMethod 'ECO_TDL']
+    AD -->|FR, Dept in IDF List & Source != 'ApiShopping'| AF[Set RealShippingMethod 'ECO_IDF']
+    AD -->|FR, Otherwise| AG[Set RealShippingMethod 'ECO_PREVOTE']
+    AD -->|Not FR| AH[Set RealShippingMethod 'EXPRESS_CALBERSON']
+    AG --> AI([End])
+    AH --> AI
+    AF --> AI
+    AE --> AI
+    AC --> AI
+    AB --> AI
+    Z --> AI
+    P --> AI
+    O --> AI
+    R --> AI
+</div>
+
+</body>
+</html>
