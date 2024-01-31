@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shipping Method Switch Diagram</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({startOnLoad: true});
+    </script>
+</head>
+<body>
+
+<div class="mermaid">
+graph TD
+    A(Start) --> B(Get Sale Service)
+    B --> C(Get Order Info)
+    C --> D{Country ID Empty?}
+    D -- Yes --> E(Set Country ID to 'FR')
+    D -- No --> F(Use Existing Country ID)
+    E --> G(Format Shipping Postcode)
+    F --> G
+    G --> H(Extract Department Code)
+    H --> I(Set Switch Threshold)
+    I --> J{Iterate Sale Products}
+    
+    J --> K{Qualifies for Switch?}
+    K -- Yes --> L(Add to Monocolis List)
+    K -- No --> M(Continue)
+    
+    L --> N(Calculate Total Qty)
+    M --> N
+    N --> O{Qty >= Switch Threshold?}
+    O -- Yes --> P{In ECO_TDL Department List?}
+    O -- No --> Q(End)
+    
+    P -- Yes --> R(Set RealShipping to 'ECO_TDL')
+    P -- No --> S{In ECO_IDF Department List?}
+    
+    S -- Yes --> T(Set RealShipping to 'ECO_IDF')
+    S -- No --> U(Set RealShipping to 'ECO_PREVOTE')
+    
+    R --> V(Update Sale Products)
+    T --> V
+    U --> V
+    V --> Q
+    
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style Q fill:#ccf,stroke:#333,stroke-width:2px
+</div>
+
+</body>
+</html>
