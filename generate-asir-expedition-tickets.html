@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mermaid Diagram</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({startOnLoad:true});
+    </script>
+</head>
+<body>
+
+<h1>AsirGroup Tickets Generation Script for the First Time</h1>
+
+<div class="mermaid">
+sequenceDiagram
+    title AsirGroup tickets generation script for the first time
+
+    participant Command as GenerateExpeditionTicketsCommand
+    participant DB as Database
+    participant Service as ShippingService
+    participant Entity as SaleProductEntity
+
+    Command->>Command: Acquire lock
+    alt Lock acquired
+        Command->>+DB: Execute SQL query
+        DB-->>-Command: Return sale products
+        loop For each sale product
+            Command->>Entity: Load SaleProductEntity
+            Entity->>Command: Details loaded
+            alt AxMenzzoDeliveryMethod 'etage' or 'etage_with_assembly' and not isEligibleIdf
+                Command->>Service: Set carrier to VIR
+                Service->>Service: Pre-ship action for VIR
+                Service->>Service: Print VIR tickets
+                Service->>Command: Record VIR ticket printing
+            else isChronopostable and Weight <= 14
+                Command->>Service: Set carrier to GLS
+                Service->>Service: Pre-ship action for GLS
+                Service->>Service: Print GLS tickets
+                Service->>Command: Record GLS ticket printing
+            else Other shipping methods
+                Command->>Service: Set carrier to GEODIS
+                Service->>Service: Pre-ship action for GEODIS
+                Service->>Service: Generate GEODIS Expedition tickets
+                Service->>Command: Record GEODIS ticket generation
+            end
+        end
+        Command->>Command: Release lock
+    else Lock not acquired
+        Command->>Command: Exit command with message
+    end
+    Command->>Command: Finish execution
+</div>
+
+</body>
+</html>
