@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shipping Price Calculation Diagram</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({startOnLoad: true});
+    </script>
+</head>
+<body>
+
+<div class="mermaid">
+graph TD
+    A(Start) --> B[Get Store ID]
+    B --> C{Is Free DropShip Shipping?}
+    C -- Yes --> D[Return 0]
+    C -- No --> E{Is Corse Eligible?}
+    E -- Yes --> F[Calculate Corse Shipping Price]
+    E -- No --> G{Is Monocolis Eligible?}
+
+    G -- Yes --> H[Get Monocolis Shipping Price]
+    G -- No --> J[Calculate Standard Shipping Price]
+    H --> I{Is Store ID 23 or 26?}
+    I -- Yes --> K[Calculate GLS Shipping Price]
+    I -- No --> L[Continue with Monocolis Price]
+
+    J --> M{Store ID not 3, 4, 9, 8, 15?}
+    M -- No --> N[Continue with Standard Shipping Price]
+    M -- Yes --> O{Is Monocolis Eligible for 1 qty?}
+    O -- Yes --> P{Is Store ID 23 or 26?}
+    P -- Yes --> K
+    P -- No --> N
+    O -- No --> Q[Calculate Increased Standard Price]
+
+    Q --> R{Store ID in [14, 29, 30, 2, 25, 28]?}
+    R -- Yes --> S[Calculate Europe Shipping Price]
+    R -- No --> T{Store ID in [23, 26]?}
+    T -- Yes --> U[Get New Default Etage Shipping Price]
+    T -- No --> V[Continue with Increased Standard Price]
+
+    S --> W{Europe Shipping Price > 1?}
+    W -- Yes --> X[Apply Europe Shipping Price]
+    W -- No --> V
+
+    X --> Y[Return Shipping Price]
+    U --> Y
+    V --> Y
+    L --> Y
+    N --> Y
+    F --> Y
+    D --> Z(End)
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style Z fill:#ccf,stroke:#333,stroke-width:2px
+</div>
+
+</body>
+</html>
