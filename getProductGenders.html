@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Gender Determination Flowchart</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.8.0/dist/mermaid.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            mermaid.initialize({startOnLoad: true});
+        });
+    </script>
+    <style>
+        .mermaid {
+            border: 1px solid black;
+            padding: 8px;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Product Gender Determination Flowchart</h1>
+
+<div class="mermaid">
+graph TD
+    start(Start) --> init([Initialize Arrays])
+    init --> genresLoop{Loop Genres}
+    genresLoop --> |Match found| setAssignedGender[Set Assigned Gender based on Category]
+    genresLoop --> |No Match| agesLoop{Loop Ages}
+    setAssignedGender --> agesLoop
+
+    agesLoop --> |Match found| setAssignedAge[Set Assigned Age based on Category]
+    agesLoop -.-> processCombinations[Process Combinations with all Genders and Ages]
+    
+    setAssignedAge --> processCombinations
+    processCombinations --> checkGenMenAgeAdult{Check Men & Adulte Combination} 
+    checkGenMenAgeAdult --> |Found| returnMen[Return Men]
+
+    processCombinations --> checkGenWomenAgeAdult{Check Women & Adulte Combination}
+    checkGenWomenAgeAdult --> |Found| returnWomen[Return Women]
+
+    processCombinations --> checkGenAdultBoth{Check Adulte in both arrays}
+    checkGenAdultBoth --> |Found| returnMenWomen[Return Men & Women]
+
+    processCombinations --> checkGenMenAgeYoung{Check Men & Young Combination}
+    checkGenMenAgeYoung --> |Found| returnBoy[Return Boy]
+
+    processCombinations --> checkGenWomenAgeYoung{Check Women & Young Combination}
+    checkGenWomenAgeYoung --> |Found| returnGirl[Return Girl]
+
+    processCombinations --> checkGenYoungBoth{Check Young in both arrays}
+    checkGenYoungBoth --> |Found| returnBoyGirl[Return Boy & Girl]
+
+    processCombinations --> checkGenMenAgeAll{Check Men & All Ages}
+    checkGenMenAgeAll --> |Found| returnMenBoy[Return Men & Boy]
+
+    processCombinations --> checkGenWomenAgeAll{Check Women & All Ages}
+    checkGenWomenAgeAll --> |Found| returnWomenGirl[Return Women & Girl]
+
+    processCombinations --> checkGenAgeBaby{Check Baby Gender}
+    checkGenAgeBaby --> |Found| returnBaby[Return Baby]
+
+    agesLoop -.-> |No Match| sansAgeCheck{Check for Title if sans Age}
+    sansAgeCheck --> |Title Check| titleHandle[Process Title]
+    titleHandle --> |Title suggests Men| returnMen
+    titleHandle --> |Title suggests Women| returnWomen
+    titleHandle --> |Title suggests Boy| returnBoy
+    titleHandle --> |Title suggests Girl| returnGirl
+
+    processCombinations -.-> |Continue processing other combinations| returnUnique[Return Unique Genders]
+    sansAgeCheck -.-> |No Gender Matches| returnNull[Return NULL]
+
+    returnMen -.->  returnUnique
+    returnWomen -.-> returnUnique
+    returnMenWomen -.-> returnUnique
+    returnBoy -.-> returnUnique
+    returnGirl -.-> returnUnique
+    returnBoyGirl -.-> returnUnique
+    returnMenBoy -.-> returnUnique
+    returnWomenGirl -.-> returnUnique
+    returnBaby -.-> returnUnique
+    returnNull -.-> returnUnique
+</div>
+
+</body>
+</html>
