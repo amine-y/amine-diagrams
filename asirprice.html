@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Diagramme des Prix</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({startOnLoad:true});
+    </script>
+</head>
+<body>
+    <div class="mermaid">
+        %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#f9f9f9', 'primaryBorderColor': '#333', 'primaryTextColor': '#333', 'lineColor': '#333', 'secondaryColor': '#fff', 'tertiaryColor': '#fff', 'fontFamily': 'Arial'}}}%%
+        graph TB;
+          A[Calcule des prix Asir] --> B1[Produit Asir: Oui]
+          A[Calcule des prix Asir] --> B2[Produit Asir: Non]
+
+          subgraph "Produit Asir : Oui"
+            B1 --> C1[En stock interne : Oui]
+            B1 --> C2[En stock interne : Non]
+
+            subgraph "En stock interne : Oui"
+              C1 --> D1a[En promo : Oui]
+              C1 --> D1b[En promo : Non]
+
+              D1a --> E1a[Prix sans réduction : Wholesale_Price*Coef]
+              D1a --> E1b[Prix avec réduction : Prix sans réduction-30%]
+              D1a --> E1c[Prix Promo sans réduction : N/A]
+              D1a --> E1d[Prix Promo avec réduction : N/A]
+              D1a --> E1e[Prix bas dans les 30 jours : Is the Low buying price in the last 30 days]
+
+              D1b --> F1a[Prix sans réduction : Wholesale_Price*Coef]
+              D1b --> F1b[Prix avec réduction : Prix sans réduction-30%]
+              D1b --> F1c[Prix Promo sans réduction : N/A]
+              D1b --> F1d[Prix Promo avec réduction : N/A]
+              D1b --> F1e[Prix bas dans les 30 jours : Is the Low buying price in the last 30 days]
+            end
+
+            subgraph "En stock interne : Non"
+              C2 --> D2a[En promo : Oui]
+              C2 --> D2b[En promo : Non]
+              
+              D2a --> G1a[Prix sans réduction : Wholesale_Price*Coef]
+              D2a --> G1b[Prix avec réduction : Prix sans réduction-18%]
+              D2a --> G1c[Prix Promo sans réduction : Wholesale_Promo_Price*Coef]
+              D2a --> G1d[Prix Promo avec réduction : Prix Promo sans réduction-18%]
+              D2a --> G1e[Prix bas dans les 30 jours : Is the Low buying price in the last 30 days]
+
+              D2b --> H1a[Prix sans réduction : Wholesale_Price*Coef]
+              D2b --> H1b[Prix avec réduction : Prix sans réduction-18%]
+              D2b --> H1c[Prix Promo sans réduction : N/A]
+              D2b --> H1d[Prix Promo avec réduction : N/A]
+              D2b --> H1e[Prix bas dans les 30 jours : Is the Low buying price in the last 30 days]
+            end
+          end
+
+          subgraph Inpout
+            J1[Low_Price < Prix Promo avec réduction] 
+            J2[Low_Price > Prix Promo avec réduction] 
+            J3[Low_Price > Prix avec réduction]
+
+            J1 --> K1[Prix de base : Prix avec réduction]
+            J1 --> L1[Prix Promo : N/A]
+
+            J1 --> K2[Prix de base : Prix Promo avec réduction]
+            J1 --> L2[Prix Promo : N/A]
+
+            J1 --> K3[Prix de base : Prix avec réduction]
+            J1 --> L3[Prix Promo : N/A]
+
+            J2 --> K4[Prix de base : Prix avec réduction]
+            J2 --> L4[Prix Promo : N/A]
+
+            J2 --> K5[Prix de base : Prix bas dans les 30 jours]
+            J2 --> L5[Prix Promo : Prix Promo avec réduction]
+
+            J2 --> K6[Prix de base : Prix avec réduction]
+            J2 --> L6[Prix Promo : Prix avec réduction]
+
+            J3 --> K7[Prix de base : Prix bas dans les 30 jours]
+            J3 --> L7[Prix Promo : Prix avec réduction]
+
+            J3 --> K8[Prix de base : Prix bas dans les 30 jours]
+            J3 --> L8[Prix Promo : Prix Promo avec réduction]
+
+            J3 --> K9[Prix de base : Prix bas dans les 30 jours]
+            J3 --> L9[Prix Promo : Prix avec réduction]
+
+          end
+    </div>
+</body>
+</html>
